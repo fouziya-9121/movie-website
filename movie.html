@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Movies Site</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #131720;
+            font-family: sans-serif;
+        }
+
+        h3 {
+            color: white;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #131720;
+            padding: 10px;
+
+        }
+
+        .topnav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        .topnav .search-container {
+            float: right;
+        }
+
+        form {
+            background-color: #151f30;
+            width: 300px;
+            height: 43px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            all: unset;
+            font: 15px system-ui;
+            color: #fff;
+            height: 100%;
+            width: 100%;
+            padding: 6px 9px;
+        }
+
+        .thumbnail {
+            height: 350px;
+            width: 300px;
+            border-radius: 19px;
+        }
+
+        .column {
+            float: left;
+            width: 25%;
+            padding: 10px 10px;
+        }
+
+        .card {
+            border-radius: 19px;
+            text-align: center;
+            background-color: #151f30;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="topnav">
+        <a class="active" href="#">Movies Site</a>
+        <div class="search-container">
+            <form role="search" id="form">
+                <input type="search" id="query" name="q" placeholder="search .." autocomplete="off">
+            </form>
+        </div>
+    </div>
+    <div style="padding-left: 16px;">
+        <section id="section">
+            <!--  <div class="row">
+                <div class="column">
+                    <div class="card">
+                        <center><img src="https://image.tmdb.org/t/p/w1280/fiVW06jE7z9YnO4trhaMEdclSiC.jpg"
+                                class="thumbnail"></center>
+                        <h3>Movie Title</h3>
+                    </div>
+                </div>
+            </div>-->
+        </section>
+</body>
+<script>
+    const APILINK = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.des&api_key=f1327644c74b8cba3e95a45487ad8ee6&page=1";
+    const IMG_PATH = "https://image.tmdb.org/t/p/w1280";
+    const SEARCHAPI = "https://api.themoviedb.org/3/search/movie?&api_key=f1327644c74b8cba3e95a45487ad8ee6&query=";
+    const main = document.getElementById("section");
+    const form = document.getElementById("form");
+    const search = document.getElementById("query");
+    returnMovies(APILINK)
+    function returnMovies(url) {
+        fetch(url).then(res => res.json())
+            .then(function (data) {
+                data.results.forEach(element => {
+                    const div_card = document.createElement("div");
+                    div_card.setAttribute('class', 'card');
+                    const div_row = document.createElement("div");
+                    div_row.setAttribute('class', 'row');
+                    const div_column = document.createElement("div");
+                    div_column.setAttribute('class', 'column');
+                    const image = document.createElement("img");
+                    image.setAttribute('class', 'thumbnail');
+                    div_card.setAttribute('id', 'image');
+                    const title = document.createElement("h3");
+                    div_card.setAttribute('id', 'title');
+                    const center = document.createElement("center");
+                    title.innerHTML = `${element.title}`;
+                    image.src = IMG_PATH + element.poster_path;
+                    center.appendChild(image);
+                    div_card.appendChild(center);
+                    div_card.appendChild(title);
+                    div_column.appendChild(div_card);
+                    div_row.appendChild(div_column);
+                    main.appendChild(div_row);
+                });
+            });
+    }
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        main.innerHTML = '';
+        const searchItem = search.value;
+        if (searchItem) {
+            returnMovies(SEARCHAPI + searchItem);
+            search.value = "";
+        }
+    })
+</script>
+
+</html>
